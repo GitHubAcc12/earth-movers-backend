@@ -13,9 +13,6 @@ import (
 
 
 func main() {
-	//comps := math.Compositions(30, 5)
-	//log.Print("Compositions:")
-	//log.Print(comps)
 	r := gin.Default()
 	r.POST("/ping", ping)
 	r.Run()
@@ -28,8 +25,15 @@ func ping(c *gin.Context) {
 	var request data.Request
 	c.BindJSON(&request)
 
-	n, _ := strconv.Atoi(request.N)
-	k, _ := strconv.Atoi(request.K)
+	n, err1 := strconv.Atoi(request.N)
+	k, err2 := strconv.Atoi(request.K)
+
+	if err1 =! nil {
+		log.Fatal(err1)
+	}
+	if err2 != nil {
+		log.Fatal(err2)
+	}
 
 	log.Print("Computing weak compositions of " + strconv.Itoa(n) + " into " + strconv.Itoa(k) + " parts.")
 
