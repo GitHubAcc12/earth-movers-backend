@@ -14,12 +14,12 @@ import (
 
 func main() {
 	r := gin.Default()
-	r.POST("/ping", ping)
+	r.POST("/emd", computeEmd)
 	r.Run()
 }
 
 
-func ping(c *gin.Context) {
+func computeEmd(c *gin.Context) {
 	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	var request data.Request
@@ -28,7 +28,7 @@ func ping(c *gin.Context) {
 	n, err1 := strconv.Atoi(request.N)
 	k, err2 := strconv.Atoi(request.K)
 
-	if err1 =! nil {
+	if err1 != nil {
 		log.Fatal(err1)
 	}
 	if err2 != nil {
@@ -39,7 +39,9 @@ func ping(c *gin.Context) {
 
 	comps := math.Compositions(n, k)
 
-	jsonResult, err := json.Marshal(comps)
+	distance_matrix := math.DistanceMatrix(comps, float64(n*(k-1)))
+
+	jsonResult, err := json.Marshal(distance_matrix)
 
 	if err != nil {
 		log.Fatal(err)
@@ -48,4 +50,5 @@ func ping(c *gin.Context) {
 
 
 	c.String(200, string(jsonResult))
+	log.Print("Response sent.")
 }
