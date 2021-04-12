@@ -1,8 +1,6 @@
 package math
 
 import (
-	"log"
-
 	"earth-movers-backend/tools"
 )
 
