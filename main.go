@@ -102,3 +102,10 @@ func computeEmd(c *gin.Context) {
 	c.String(200, string(jsonResult))
 	log.Print("Response sent.")
 }
+
+
+func analyzeBigDataset(distance_matrix [][]float64, threshold float64) {
+	// Merge close points: anything with distance less than
+	// given threshold gets merged
+	
+}
