@@ -4,7 +4,14 @@ import (
 	"earth-movers-backend/tools"
 )
 
-func emd(dist1 []int, dist2 []int) int {
+type Metric func([]int, []int) int
+
+func GPA(dist1 []int, dist2 []int) int {
+	return tools.Sum(dist1) - tools.Sum(dist2)
+}
+
+
+func EMD(dist1 []int, dist2 []int) int {
 	length := len(dist1)
 	dif := make([]int, length)
 	result := 0
@@ -16,7 +23,7 @@ func emd(dist1 []int, dist2 []int) int {
 	return result
 }
 
-func DistanceMatrix(distributions [][]int, maxVal float64) [][]float64 {
+func DistanceMatrix(distributions [][]int, maxVal float64, distance Metric) [][]float64 {
 	distance_matrix := make([][]float64, len(distributions))
 	for i := range distributions {
 		distance_matrix[i] = make([]float64, len(distributions))
@@ -25,7 +32,7 @@ func DistanceMatrix(distributions [][]int, maxVal float64) [][]float64 {
 	for i := range distributions {
 		distance_matrix[i][i] = 0
 		for j := i+1; j < len(distributions); j++ {
-			dist_val := emd(distributions[i], distributions[j])
+			dist_val := distance(distributions[i], distributions[j])
 			distance_matrix[i][j] = float64(dist_val)/maxVal
 			distance_matrix[j][i] = float64(dist_val)/maxVal
 		}

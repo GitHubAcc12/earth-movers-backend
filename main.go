@@ -53,7 +53,7 @@ func analyzeData(c *gin.Context) {
 	n := tools.Sum(i_grade_data[0])
 	k := len(i_grade_data[0])
 
-	distance_matrix := math.DistanceMatrix(i_grade_data, float64(n*(k-1)))
+	distance_matrix := math.DistanceMatrix(i_grade_data, float64(n*(k-1)), math.EMD)
 
 
 	jsonResult, err := json.Marshal(distance_matrix)
@@ -89,7 +89,7 @@ func computeEmd(c *gin.Context) {
 
 	comps := math.Compositions(n, k)
 
-	distance_matrix := math.DistanceMatrix(comps, float64(n*(k-1)))
+	distance_matrix := math.DistanceMatrix(comps, float64(n*(k-1)), math.EMD)
 
 	jsonResult, err := json.Marshal(distance_matrix)
 

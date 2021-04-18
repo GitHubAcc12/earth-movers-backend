@@ -1,8 +1,7 @@
 package tools
 
-import (
-	"log"
-)
+
+
 
 func Sum(input []int) int {
 	sum := 0
