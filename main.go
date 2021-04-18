@@ -55,8 +55,10 @@ func analyzeData(c *gin.Context) {
 
 	distance_matrix := math.DistanceMatrix(i_grade_data, float64(n*(k-1)), math.EMD)
 
+	var response data.Response
+	response.EMD_Distances = distance_matrix
 
-	jsonResult, err := json.Marshal(distance_matrix)
+	jsonResult, err := json.Marshal(response)
 
 	if err != nil {
 		log.Fatal(err)
@@ -91,7 +93,10 @@ func computeEmd(c *gin.Context) {
 
 	distance_matrix := math.DistanceMatrix(comps, float64(n*(k-1)), math.EMD)
 
-	jsonResult, err := json.Marshal(distance_matrix)
+	var response data.Response
+	response.EMD_Distances = distance_matrix
+
+	jsonResult, err := json.Marshal(response)
 
 	if err != nil {
 		log.Fatal(err)
