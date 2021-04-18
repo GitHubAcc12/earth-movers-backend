@@ -7,7 +7,7 @@ import (
 type Metric func([]int, []int) int
 
 func GPA(dist1 []int, dist2 []int) int {
-	return tools.Sum(dist1) - tools.Sum(dist2)
+	return tools.Weighted_Sum(dist1) - tools.Weighted_Sum(dist2)
 }
 
 
