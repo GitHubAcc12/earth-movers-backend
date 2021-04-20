@@ -31,27 +31,35 @@ func analyzeData(c *gin.Context) {
 	r := csv.NewReader(strings.NewReader(request.DATA_CSV))
 
 	s_grade_data, err := r.ReadAll()
-	i_grade_data := [][]int{}
+	i_grade_data := make([][]int, len(s_grade_data))
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	max_n := -1
+
 	// Convert to ints
-	for _, i := range s_grade_data {
+	for r_idx, distr := range s_grade_data {
 		grades := make([]int, len(s_grade_data[0]))
-		for _, j := range i {
-			j_trimmed := strings.Trim(j, " ")
-			grade, err := strconv.Atoi(j_trimmed)
+		for c_idx, s_grade := range distr {
+			s_grade_trimmed := strings.Trim(s_grade, " ")
+			grade, err := strconv.Atoi(s_grade_trimmed)
 			if err != nil {
 				log.Fatal(err)
 			}
-			grades = append(grades, grade)
+			grades[c_idx] = grade
 		}
-		i_grade_data = append(i_grade_data, grades)
+		i_grade_data[r_idx] = grades
+		number_students := tools.Sum(grades)
+		if max_n < number_students {
+			max_n = number_students
+		}
 	}
-	n := tools.Sum(i_grade_data[0])
+	n := max_n //previously tools.Sum(i_grade_data[0]), but mistake here if not all classes have the same number of students
 	k := len(i_grade_data[0])
+
+	log.Print(i_grade_data)
 
 	distance_matrix := math.DistanceMatrix(i_grade_data, float64(n*(k-1)))
 
