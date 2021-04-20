@@ -59,12 +59,17 @@ func analyzeData(c *gin.Context) {
 	n := max_n //previously tools.Sum(i_grade_data[0]), but mistake here if not all classes have the same number of students
 	k := len(i_grade_data[0])
 
-	log.Print(i_grade_data)
 
-	distance_matrix := math.DistanceMatrix(i_grade_data, float64(n*(k-1)))
+	distance_matrix := math.DistanceMatrix(i_grade_data, float64(n*(k-1)), math.EMD)
+
+	var response data.Response
+	response.EMD_Distances = distance_matrix
+	
+	gpa_distance_matrix := math.DistanceMatrix(i_grade_data, 4., math.GPA)
+	response.GPA_Distances = gpa_distance_matrix
 
 
-	jsonResult, err := json.Marshal(distance_matrix)
+	jsonResult, err := json.Marshal(response)
 
 	if err != nil {
 		log.Fatal(err)
@@ -97,9 +102,18 @@ func computeEmd(c *gin.Context) {
 
 	comps := math.Compositions(n, k)
 
-	distance_matrix := math.DistanceMatrix(comps, float64(n*(k-1)))
+	distance_matrix := math.DistanceMatrix(comps, float64(n*(k-1)), math.EMD)
 
-	jsonResult, err := json.Marshal(distance_matrix)
+	var response data.Response
+	response.EMD_Distances = distance_matrix
+	response.GPA_Distances = [][]float64{}
+
+	gpa_distance_matrix := math.DistanceMatrix(comps, 4., math.GPA)
+	response.GPA_Distances = gpa_distance_matrix
+
+
+	jsonResult, err := json.Marshal(response)
+	log.Print(string(jsonResult))
 
 	if err != nil {
 		log.Fatal(err)
@@ -109,4 +123,11 @@ func computeEmd(c *gin.Context) {
 
 	c.String(200, string(jsonResult))
 	log.Print("Response sent.")
+}
+
+
+func analyzeBigDataset(distance_matrix [][]float64, threshold float64) {
+	// Merge close points: anything with distance less than
+	// given threshold gets merged
+	
 }
