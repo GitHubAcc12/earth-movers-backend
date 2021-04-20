@@ -10,7 +10,6 @@ import (
 
 	"earth-movers-backend/math"
 	"earth-movers-backend/data"
-	"earth-movers-backend/tools"
 )
 
 
@@ -37,7 +36,6 @@ func analyzeData(c *gin.Context) {
 		log.Fatal(err)
 	}
 
-	max_n := -1
 
 	// Convert to ints
 	for r_idx, distr := range s_grade_data {
@@ -51,16 +49,14 @@ func analyzeData(c *gin.Context) {
 			grades[c_idx] = grade
 		}
 		i_grade_data[r_idx] = grades
-		number_students := tools.Sum(grades)
-		if max_n < number_students {
-			max_n = number_students
-		}
 	}
-	n := max_n //previously tools.Sum(i_grade_data[0]), but mistake here if not all classes have the same number of students
-	k := len(i_grade_data[0])
 
-
-	distance_matrix := math.DistanceMatrix(i_grade_data, float64(n*(k-1)), math.EMD)
+	// Since now the metric will already normalize the result to [0,1],
+	// The value we divide each distance by can be 1
+	// Have to use this norming version of EMD, because can't assume
+	// Each class to have the same number of students when 
+	// analyzing own data
+	distance_matrix := math.DistanceMatrix(i_grade_data, 1, math.NormedEmd)
 
 	var response data.Response
 	response.EMD_Distances = distance_matrix
@@ -113,7 +109,6 @@ func computeEmd(c *gin.Context) {
 
 
 	jsonResult, err := json.Marshal(response)
-	log.Print(string(jsonResult))
 
 	if err != nil {
 		log.Fatal(err)
