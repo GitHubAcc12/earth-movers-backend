@@ -11,6 +11,14 @@ func Sum(input []int) int {
 	return sum
 }
 
+func F_Sum(input []float64) float64 {
+	sum := 0.
+	for _, i := range input {
+		sum += i
+	}
+	return sum
+}
+
 func Weighted_Sum(input []int) int {
 	sum := 0
 	for i, e := range input {
@@ -20,6 +28,14 @@ func Weighted_Sum(input []int) int {
 }
 
 func Abs(x int) int {
+	if x < 0 {
+		return -x
+	} else {
+		return x
+	}
+}
+
+func F_Abs(x float64) float64 {
 	if x < 0 {
 		return -x
 	} else {
